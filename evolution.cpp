@@ -226,35 +226,35 @@ arma::cx_dmat os_DCE_Evolution::evolution1Step(const int&j, const arma::cx_dmat&
 
     ///////////////////operator exp(-idt H1)
     //operator U15, for each column n2
-    for (int n2=0;n2<N2;n2++){
-        double x2n2=x2ValsAll[n2];
-        psiCurr.col(n2)*=std::exp(1i*dt*0.5*g0*std::sqrt(2.0*omegam)*std::cos(omegap*tj)*x2n2);
-    }
-
-    //operator U14
-    //construct U14
-    //construct the exponent part
-    arma::cx_dmat U14=-1i*dt*g0*omegac*std::sqrt(2.0*omegam)*std::cos(omegap*tj)*this->U14Exp;
-
-
-    U14=arma::exp(U14);
-    psiCurr=psiCurr %U14;
-
-    //operator U13
-    psiCurr*=std::exp(1i*dt*0.5*Deltam+1i*dt*0.5*omegac);
-
-    //operator U12, for each column n2
-    for(int n2=0;n2<N2;n2++){
-        double x2n2Squared=x2ValsAllSquared[n2];
-        psiCurr.col(n2)*=std::exp(-1i*dt*Deltam*omegam/(2.0*std::cosh(2.0*r))
-                *std::exp(-2.0*r)*x2n2Squared);
-    }
-
-    //operator U11, for each row n1
-    for(int n1=0;n1<N1;n1++){
-        double x1n1Squared=x1ValsAllSquared[n1];
-        psiCurr.row(n1)*=std::exp(-1i*dt*0.5*std::pow(omegac,2)*x1n1Squared);
-    }
+//    for (int n2=0;n2<N2;n2++){
+//        double x2n2=x2ValsAll[n2];
+//        psiCurr.col(n2)*=std::exp(1i*dt*0.5*g0*std::sqrt(2.0*omegam)*std::cos(omegap*tj)*x2n2);
+//    }
+//
+//    //operator U14
+//    //construct U14
+//    //construct the exponent part
+//    arma::cx_dmat U14=-1i*dt*g0*omegac*std::sqrt(2.0*omegam)*std::cos(omegap*tj)*this->U14Exp;
+//
+//
+//    U14=arma::exp(U14);
+//    psiCurr=psiCurr %U14;
+//
+//    //operator U13
+//    psiCurr*=std::exp(1i*dt*0.5*Deltam+1i*dt*0.5*omegac);
+//
+//    //operator U12, for each column n2
+//    for(int n2=0;n2<N2;n2++){
+//        double x2n2Squared=x2ValsAllSquared[n2];
+//        psiCurr.col(n2)*=std::exp(-1i*dt*Deltam*omegam/(2.0*std::cosh(2.0*r))
+//                *std::exp(-2.0*r)*x2n2Squared);
+//    }
+//
+//    //operator U11, for each row n1
+//    for(int n1=0;n1<N1;n1++){
+//        double x1n1Squared=x1ValsAllSquared[n1];
+//        psiCurr.row(n1)*=std::exp(-1i*dt*0.5*std::pow(omegac,2)*x1n1Squared);
+//    }
 
     double dbN1=static_cast<double >(N1);
     double dbN2=static_cast<double >(N2);
@@ -264,39 +264,39 @@ arma::cx_dmat os_DCE_Evolution::evolution1Step(const int&j, const arma::cx_dmat&
     for(int i=0;i<N1*N2;i++){
         psiTmp[i]=psiRow(i);
     }
-    //psi2Y
-    fftw_execute(plan_psi2Y);
-    //for each row n1
-    for(int n1=0;n1<N1;n1++){
-        double kn1Squared=k1ValsAllSquared[n1];
-        for(int n2=0;n2<N2;n2++){
-            Y[n1*N2+n2]*=std::exp(-1i*0.5*kn1Squared*dt);
-        }
-    }
-    //Y2psi
-    fftw_execute(plan_Y2psi);
-    //normalization
-    for(int i=0;i<N1*N2;i++){
-        psiTmp[i]/=dbN1;
-    }
-
-    //\partial_{x_{2}}^{2}
-    //psi2Z
-    fftw_execute(plan_psi2Z);
-    //for each col n2
-    for(int n2=0;n2<N2;n2++){
-        double kn2Squared=k2ValsAllSquared[n2];
-        for(int n1=0;n1<N1;n1++){
-            Z[n2+n1*N2]*=std::exp(-1i*Deltam/(2.0*omegam*std::cosh(2.0*r))
-                    *e2r*kn2Squared*dt);
-        }
-    }
-    //Z2psi
-    fftw_execute(plan_Z2psi);
-    //normalization
-    for(int i=0;i<N1*N2;i++){
-        psiTmp[i]/=dbN2;
-    }
+//    //psi2Y
+//    fftw_execute(plan_psi2Y);
+//    //for each row n1
+//    for(int n1=0;n1<N1;n1++){
+//        double kn1Squared=k1ValsAllSquared[n1];
+//        for(int n2=0;n2<N2;n2++){
+//            Y[n1*N2+n2]*=std::exp(-1i*0.5*kn1Squared*dt);
+//        }
+//    }
+//    //Y2psi
+//    fftw_execute(plan_Y2psi);
+//    //normalization
+//    for(int i=0;i<N1*N2;i++){
+//        psiTmp[i]/=dbN1;
+//    }
+//
+//    //\partial_{x_{2}}^{2}
+//    //psi2Z
+//    fftw_execute(plan_psi2Z);
+//    //for each col n2
+//    for(int n2=0;n2<N2;n2++){
+//        double kn2Squared=k2ValsAllSquared[n2];
+//        for(int n1=0;n1<N1;n1++){
+//            Z[n2+n1*N2]*=std::exp(-1i*Deltam/(2.0*omegam*std::cosh(2.0*r))
+//                    *e2r*kn2Squared*dt);
+//        }
+//    }
+//    //Z2psi
+//    fftw_execute(plan_Z2psi);
+//    //normalization
+//    for(int i=0;i<N1*N2;i++){
+//        psiTmp[i]/=dbN2;
+//    }
 
     ////////////////////exp(-idt H3)
 
@@ -308,7 +308,7 @@ arma::cx_dmat os_DCE_Evolution::evolution1Step(const int&j, const arma::cx_dmat&
         fx1n1Vec(n1)=this->f(n1,tj);
     }
     arma::cx_dmat matTmp=arma::kron(fx1n1Vec,k2Row);
-    matTmp*=-1i*dt;
+    matTmp*=1i*dt;
 
     arma::cx_dmat M=arma::exp(matTmp);
 
